@@ -11,7 +11,8 @@ part of 'dio_provider.dart';
 /// Dio client for `https://api.themoviedb.org/3/`.
 ///
 /// Sends `Authorization: Bearer <TMDB_ACCESS_TOKEN>`.
-/// Logging is attached only in debug builds.
+/// Adds `session_id` only when [attachTmdbSessionKey] is true
+/// and a session is stored. Logging runs only in debug builds.
 
 @ProviderFor(dio)
 final dioProvider = DioProvider._();
@@ -19,14 +20,16 @@ final dioProvider = DioProvider._();
 /// Dio client for `https://api.themoviedb.org/3/`.
 ///
 /// Sends `Authorization: Bearer <TMDB_ACCESS_TOKEN>`.
-/// Logging is attached only in debug builds.
+/// Adds `session_id` only when [attachTmdbSessionKey] is true
+/// and a session is stored. Logging runs only in debug builds.
 
 final class DioProvider extends $FunctionalProvider<Dio, Dio, Dio>
     with $Provider<Dio> {
   /// Dio client for `https://api.themoviedb.org/3/`.
   ///
   /// Sends `Authorization: Bearer <TMDB_ACCESS_TOKEN>`.
-  /// Logging is attached only in debug builds.
+  /// Adds `session_id` only when [attachTmdbSessionKey] is true
+  /// and a session is stored. Logging runs only in debug builds.
   DioProvider._()
     : super(
         from: null,
@@ -60,4 +63,4 @@ final class DioProvider extends $FunctionalProvider<Dio, Dio, Dio>
   }
 }
 
-String _$dioHash() => r'b2dd7d76d7d23605c05217be92883e2f412c9ec1';
+String _$dioHash() => r'40b10050716e9a59ae515fc8eac665e9fd941d9c';
