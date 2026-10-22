@@ -3,6 +3,7 @@ import 'package:tmdb_flutter/data/tmdb/dto/configuration_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/genre_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/movie_details_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/movie_dto.dart';
+import 'package:tmdb_flutter/data/tmdb/dto/person_details_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/person_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/tv_show_details_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/tv_show_dto.dart';
@@ -268,6 +269,9 @@ final class _FakeTmdbApi implements TmdbApi {
 
   @override
   Future<TvShowDetailsDto> getTvShowDetails({required int id}) => _unused();
+
+  @override
+  Future<PersonDetailsDto> getPersonDetails({required int id}) => _unused();
 }
 
 Never _unused() => throw UnimplementedError();

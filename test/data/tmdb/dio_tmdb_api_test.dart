@@ -123,6 +123,17 @@ void main() {
       show.queryParameters['append_to_response'],
       'credits,videos,images,recommendations',
     );
+
+    final parsedPerson = await api.getPersonDetails(id: 287);
+    final person = _requestEnding(adapter, '/person/287');
+    expect(person.queryParameters['language'], 'ru-RU');
+    expect(person.queryParameters['append_to_response'], 'combined_credits');
+    expect(person.queryParameters.containsKey('page'), isFalse);
+    expect(parsedPerson.name, 'Брэд Питт');
+    expect(parsedPerson.placeOfBirth, 'США');
+    expect(parsedPerson.alsoKnownAs, ['Брэд']);
+    expect(parsedPerson.combinedCredits?.cast.single.mediaType, 'person');
+    expect(parsedPerson.combinedCredits?.cast.single.voteAverage, 1.5);
   });
 }
 
@@ -188,6 +199,9 @@ String _bodyFor(String path) {
   if (RegExp(r'/tv/\d+$').hasMatch(path)) {
     return _tvDetailsBody;
   }
+  if (RegExp(r'/person/\d+$').hasMatch(path)) {
+    return _personDetailsBody;
+  }
   return _emptyPageBody;
 }
 
@@ -218,6 +232,28 @@ const _moviePageBody = '''
 
 const _movieDetailsBody = '''
 {"id":550,"title":"Бойцовский клуб","unknown_field":"ignored","budget":0}
+''';
+
+const _personDetailsBody = '''
+{
+  "id": 287,
+  "name": "Брэд Питт",
+  "unknown_field": "ignored",
+  "place_of_birth": "США",
+  "also_known_as": ["Брэд"],
+  "combined_credits": {
+    "cast": [
+      {
+        "id": 1,
+        "media_type": "person",
+        "title": "Лишнее",
+        "popularity": 1,
+        "vote_average": 1.5
+      }
+    ],
+    "unexpected": []
+  }
+}
 ''';
 
 const _tvDetailsBody = '''

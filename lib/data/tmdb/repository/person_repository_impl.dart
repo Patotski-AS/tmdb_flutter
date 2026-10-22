@@ -2,15 +2,16 @@ import 'package:tmdb_flutter/data/tmdb/dto/person_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/mapper/person_mapper.dart';
 import 'package:tmdb_flutter/data/tmdb/model/paged.dart';
 import 'package:tmdb_flutter/data/tmdb/model/person.dart';
+import 'package:tmdb_flutter/data/tmdb/model/person_details.dart';
 import 'package:tmdb_flutter/data/tmdb/repository/image_configuration_cache.dart';
 import 'package:tmdb_flutter/data/tmdb/repository/person_repository.dart';
 import 'package:tmdb_flutter/data/tmdb/source/tmdb_api.dart';
 
-/// [PersonRepository] that maps TMDB list payloads.
+/// [PersonRepository] that maps TMDB person payloads.
 final class PersonRepositoryImpl implements PersonRepository {
   /// Creates a repository that reads people through [api].
   ///
-  /// Profile URLs use the shared [images] cache.
+  /// Profile and poster URLs use the shared [images] cache.
   const new({required this.api, required this.images});
 
   /// Remote catalog API.
@@ -27,6 +28,13 @@ final class PersonRepositoryImpl implements PersonRepository {
   @override
   Future<Paged<Person>> searchPeople(String query, [int page = 1]) {
     return _load(() => api.searchPeople(query: query, page: page));
+  }
+
+  @override
+  Future<PersonDetails> getPersonDetails(int personId) async {
+    final configuration = await images.require(api);
+    final dto = await api.getPersonDetails(id: personId);
+    return mapPersonDetails(dto, configuration);
   }
 
   Future<Paged<Person>> _load(

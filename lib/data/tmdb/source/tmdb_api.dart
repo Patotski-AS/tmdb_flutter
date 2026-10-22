@@ -2,6 +2,7 @@ import 'package:tmdb_flutter/data/tmdb/dto/configuration_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/genre_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/movie_details_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/movie_dto.dart';
+import 'package:tmdb_flutter/data/tmdb/dto/person_details_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/person_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/tv_show_details_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/tv_show_dto.dart';
@@ -32,6 +33,9 @@ abstract interface class TmdbApi {
 
   /// `GET person/popular`.
   Future<PopularPeopleResponseDto> getPopularPeople({required int page});
+
+  /// `GET person/{id}` with combined credits.
+  Future<PersonDetailsDto> getPersonDetails({required int id});
 
   /// `GET search/movie`.
   Future<PopularMoviesResponseDto> searchMovies({
