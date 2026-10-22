@@ -215,11 +215,11 @@ Use case здесь оправданы: цепочка токен → сесси
 
 ### `feat/tmdb-repositories`
 
-- [ ] DTO и доменные модели: `Movie`, `TvShow`, `Person`, `Genre`, `Paged<T>`, `ImageConfiguration`
-- [ ] `TmdbApi`: жанры, popular, search, discover, configuration, `language=ru-RU`, `include_adult=false`
-- [ ] `MovieRepository`, `TvRepository`, `PersonRepository` и маппинг DTO → модель
-- [ ] Сортировки: популярность, дата выхода, оценка
-- [ ] Unit-тесты: успешная страница, пустой поиск, HTTP-ошибка с `status_message`
+- [x] DTO и доменные модели: `Movie`, `TvShow`, `Person`, `Genre`, `Paged<T>`, `ImageConfiguration`
+- [x] `TmdbApi`: жанры, popular, search, discover, configuration, `language=ru-RU`, `include_adult=false`
+- [x] `MovieRepository`, `TvRepository`, `PersonRepository` и маппинг DTO → модель
+- [x] Сортировки: популярность, дата выхода, оценка
+- [x] Unit-тесты: успешная страница, пустой поиск, HTTP-ошибка с `status_message`
 
 ### `feat/media-catalog`
 
