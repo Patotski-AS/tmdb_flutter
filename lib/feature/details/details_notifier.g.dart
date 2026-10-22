@@ -61,7 +61,7 @@ final class DetailsNotifierProvider
   }
 }
 
-String _$detailsNotifierHash() => r'a1982ac397390aa32be0f1fd45faced505cf2039';
+String _$detailsNotifierHash() => r'751ebfc8a79cda516ff27c2cf70504df6802a2eb';
 
 /// Movie or TV card for one id.
 

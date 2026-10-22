@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tmdb_flutter/app/router.dart';
 import 'package:tmdb_flutter/core/network/tmdb_exception.dart';
+import 'package:tmdb_flutter/core/storage/session_storage.dart';
+import 'package:tmdb_flutter/core/storage/session_storage_provider.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/configuration_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/details_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/genre_dto.dart';
@@ -314,6 +316,7 @@ ProviderContainer _container(_CardApi api) {
   final images = ImageConfigurationCache();
   final container = ProviderContainer(
     overrides: [
+      sessionStorageProvider.overrideWithValue(_GuestStorage()),
       movieRepositoryProvider.overrideWithValue(
         MovieRepositoryImpl(api: api, images: images),
       ),
@@ -439,3 +442,14 @@ final class _CardApi implements TmdbApi {
 }
 
 Never _unused() => throw UnimplementedError();
+
+final class _GuestStorage implements SessionStorage {
+  @override
+  Future<StoredSession?> read() async => null;
+
+  @override
+  Future<void> write(StoredSession session) async {}
+
+  @override
+  Future<void> clear() async {}
+}

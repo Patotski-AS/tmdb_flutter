@@ -215,6 +215,9 @@ final class DetailsState {
     this.imageGallery,
     this.isLoading = false,
     this.error,
+    this.isFavorite,
+    this.isFavoriteLoading = false,
+    this.favoriteMessage,
   });
 
   /// Movie or TV. Recommendations stay on this type.
@@ -298,15 +301,29 @@ final class DetailsState {
   /// Last failure text, or null.
   final String? error;
 
+  /// Whether this movie is on the account favorite list.
+  ///
+  /// Null until a signed-in read finishes, and for a TV card or a guest.
+  final bool? isFavorite;
+
+  /// Whether a favorite write is in flight.
+  final bool isFavoriteLoading;
+
+  /// Last favorite-write failure, or null.
+  final String? favoriteMessage;
+
   /// Returns a copy with the given fields replaced.
   ///
-  /// Pass [error] or [imageGallery] to replace them, including with null.
-  /// Omit either one to keep the current value.
+  /// Pass [error], [imageGallery], [isFavorite] or [favoriteMessage]
+  /// to replace them, including with null. Omit one to keep it.
   DetailsState copyWith({
     bool? showFullCast,
     Object? imageGallery = _unchanged,
     bool? isLoading,
     Object? error = _unchanged,
+    Object? isFavorite = _unchanged,
+    bool? isFavoriteLoading,
+    Object? favoriteMessage = _unchanged,
   }) {
     return DetailsState(
       mediaType: mediaType,
@@ -338,6 +355,13 @@ final class DetailsState {
           : imageGallery as DetailsImageGallery?,
       isLoading: isLoading ?? this.isLoading,
       error: identical(error, _unchanged) ? this.error : error as String?,
+      isFavorite: identical(isFavorite, _unchanged)
+          ? this.isFavorite
+          : isFavorite as bool?,
+      isFavoriteLoading: isFavoriteLoading ?? this.isFavoriteLoading,
+      favoriteMessage: identical(favoriteMessage, _unchanged)
+          ? this.favoriteMessage
+          : favoriteMessage as String?,
     );
   }
 
@@ -370,7 +394,10 @@ final class DetailsState {
         listEquals(recommendations, other.recommendations) &&
         imageGallery == other.imageGallery &&
         isLoading == other.isLoading &&
-        error == other.error;
+        error == other.error &&
+        isFavorite == other.isFavorite &&
+        isFavoriteLoading == other.isFavoriteLoading &&
+        favoriteMessage == other.favoriteMessage;
   }
 
   @override
@@ -407,6 +434,9 @@ final class DetailsState {
       imageGallery,
       isLoading,
       error,
+      isFavorite,
+      isFavoriteLoading,
+      favoriteMessage,
     ),
   );
 }

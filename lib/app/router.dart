@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tmdb_flutter/app/placeholder_page.dart';
 import 'package:tmdb_flutter/feature/details/details_page.dart';
 import 'package:tmdb_flutter/feature/details/details_state.dart';
 import 'package:tmdb_flutter/feature/media/media_page.dart';
 import 'package:tmdb_flutter/feature/person/person_page.dart';
+import 'package:tmdb_flutter/feature/profile/favorites_page.dart';
+import 'package:tmdb_flutter/feature/profile/profile_page.dart';
 
 part 'router.g.dart';
 
@@ -39,7 +40,7 @@ class ProfileRoute extends GoRouteData with $ProfileRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const PlaceholderPage(title: 'Профиль');
+    return const ProfilePage();
   }
 }
 
@@ -50,7 +51,7 @@ class FavoritesRoute extends GoRouteData with $FavoritesRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const PlaceholderPage(title: 'Избранное');
+    return const FavoritesPage();
   }
 }
 

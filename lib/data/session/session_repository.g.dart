@@ -45,7 +45,7 @@ final class SessionRepositoryProvider
   SessionRepository create() => SessionRepository();
 }
 
-String _$sessionRepositoryHash() => r'ad1b6055d516848eb8ee62098997226862f42b46';
+String _$sessionRepositoryHash() => r'eca4efd9acc429ba02e95d013c37665569fa5412';
 
 /// Guest or authenticated TMDB session, restored from storage.
 ///

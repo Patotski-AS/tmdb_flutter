@@ -39,6 +39,21 @@ class SessionRepository extends _$SessionRepository {
     return sessionId;
   }
 
+  /// Signed-in account, or null when the state is [Guest].
+  ///
+  /// A blank session id is [Guest] even when an account id is stored.
+  Future<Authenticated?> readAuthenticated() async {
+    final current = await future;
+    if (current is! Authenticated) {
+      return null;
+    }
+    final sessionId = _sessionId;
+    if (sessionId == null || sessionId.trim().isEmpty) {
+      return null;
+    }
+    return current;
+  }
+
   /// Clears storage and becomes [Guest].
   Future<void> logout() async {
     final generation = ++_generation;
