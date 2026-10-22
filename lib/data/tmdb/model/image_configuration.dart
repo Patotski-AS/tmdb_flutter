@@ -37,16 +37,26 @@ final class ImageConfiguration {
   /// [path] is the TMDB path, including its leading slash.
   String? posterUrlFor(String? path) => _url(path, posterSize);
 
+  /// Backdrop URL for [path], or null when [path] is null.
+  ///
+  /// [path] is the TMDB path, including its leading slash.
+  String? backdropUrlFor(String? path) => _url(path, backdropSize);
+
   /// Profile URL for [path], or null when [path] is null.
   ///
   /// [path] is the TMDB path, including its leading slash.
   String? profileUrlFor(String? path) => _url(path, profileSize);
 
+  /// Absolute URL for a TMDB image [path] using [size].
+  ///
+  /// [path] is the TMDB path, including its leading slash.
+  String urlFor(String path, String size) => '$posterBaseUrl$size$path';
+
   String? _url(String? path, String size) {
     if (path == null) {
       return null;
     }
-    return '$posterBaseUrl$size$path';
+    return urlFor(path, size);
   }
 
   @override

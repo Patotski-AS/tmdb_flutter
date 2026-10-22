@@ -5,9 +5,11 @@ import 'package:tmdb_flutter/data/tmdb/model/genre.dart';
 import 'package:tmdb_flutter/data/tmdb/model/image_configuration.dart';
 import 'package:tmdb_flutter/data/tmdb/model/media_sort_option.dart';
 import 'package:tmdb_flutter/data/tmdb/model/movie.dart';
+import 'package:tmdb_flutter/data/tmdb/model/movie_details.dart';
 import 'package:tmdb_flutter/data/tmdb/model/paged.dart';
 import 'package:tmdb_flutter/data/tmdb/model/person.dart';
 import 'package:tmdb_flutter/data/tmdb/model/tv_show.dart';
+import 'package:tmdb_flutter/data/tmdb/model/tv_show_details.dart';
 import 'package:tmdb_flutter/data/tmdb/repository/movie_repository.dart';
 import 'package:tmdb_flutter/data/tmdb/repository/person_repository.dart';
 import 'package:tmdb_flutter/data/tmdb/repository/tv_repository.dart';
@@ -235,6 +237,11 @@ final class _FakeMovieRepository implements MovieRepository {
   Future<ImageConfiguration> getImageConfiguration() async {
     throw UnimplementedError();
   }
+
+  @override
+  Future<MovieDetails> getMovieDetails(int movieId) {
+    throw UnimplementedError();
+  }
 }
 
 final class _FakeTvRepository implements TvRepository {
@@ -264,6 +271,11 @@ final class _FakeTvRepository implements TvRepository {
     int page = 1,
   }) async {
     return _page(items: const [], page: page, totalPages: 1);
+  }
+
+  @override
+  Future<TvShowDetails> getTvShowDetails(int tvId) {
+    throw UnimplementedError();
   }
 }
 

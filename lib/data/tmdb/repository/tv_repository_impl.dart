@@ -4,6 +4,7 @@ import 'package:tmdb_flutter/data/tmdb/mapper/tv_mapper.dart';
 import 'package:tmdb_flutter/data/tmdb/model/genre.dart';
 import 'package:tmdb_flutter/data/tmdb/model/paged.dart';
 import 'package:tmdb_flutter/data/tmdb/model/tv_show.dart';
+import 'package:tmdb_flutter/data/tmdb/model/tv_show_details.dart';
 import 'package:tmdb_flutter/data/tmdb/repository/image_configuration_cache.dart';
 import 'package:tmdb_flutter/data/tmdb/repository/tv_repository.dart';
 import 'package:tmdb_flutter/data/tmdb/source/tmdb_api.dart';
@@ -45,6 +46,13 @@ final class TvRepositoryImpl implements TvRepository {
     return _load(
       () => api.discoverTvShows(page: page, genreId: genreId, sortBy: sortBy),
     );
+  }
+
+  @override
+  Future<TvShowDetails> getTvShowDetails(int tvId) async {
+    final configuration = await images.require(api);
+    final dto = await api.getTvShowDetails(id: tvId);
+    return mapTvDetails(dto, configuration);
   }
 
   Future<Paged<TvShow>> _load(

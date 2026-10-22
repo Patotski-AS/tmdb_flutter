@@ -1,8 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/configuration_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/genre_dto.dart';
+import 'package:tmdb_flutter/data/tmdb/dto/movie_details_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/movie_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/person_dto.dart';
+import 'package:tmdb_flutter/data/tmdb/dto/tv_show_details_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/tv_show_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/repository/image_configuration_cache.dart';
 import 'package:tmdb_flutter/data/tmdb/repository/movie_repository_impl.dart';
@@ -260,6 +262,12 @@ final class _FakeTmdbApi implements TmdbApi {
     int? genreId,
     String? sortBy,
   }) => _unused();
+
+  @override
+  Future<MovieDetailsDto> getMovieDetails({required int id}) => _unused();
+
+  @override
+  Future<TvShowDetailsDto> getTvShowDetails({required int id}) => _unused();
 }
 
 Never _unused() => throw UnimplementedError();

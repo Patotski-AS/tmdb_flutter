@@ -2,9 +2,10 @@ import 'package:tmdb_flutter/core/network/tmdb_exception.dart';
 import 'package:tmdb_flutter/data/tmdb/model/genre.dart';
 import 'package:tmdb_flutter/data/tmdb/model/image_configuration.dart';
 import 'package:tmdb_flutter/data/tmdb/model/movie.dart';
+import 'package:tmdb_flutter/data/tmdb/model/movie_details.dart';
 import 'package:tmdb_flutter/data/tmdb/model/paged.dart';
 
-/// Movies, movie genres, and the shared image configuration.
+/// Movies, movie genres, movie details, and image configuration.
 ///
 /// Failures are thrown as [TmdbException].
 abstract interface class MovieRepository {
@@ -29,6 +30,9 @@ abstract interface class MovieRepository {
     String? sortBy,
     int page = 1,
   });
+
+  /// Movie card for [movieId], including credits and videos.
+  Future<MovieDetails> getMovieDetails(int movieId);
 
   /// Cached TMDB image configuration.
   Future<ImageConfiguration> getImageConfiguration();
