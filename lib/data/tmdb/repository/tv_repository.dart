@@ -2,8 +2,9 @@ import 'package:tmdb_flutter/core/network/tmdb_exception.dart';
 import 'package:tmdb_flutter/data/tmdb/model/genre.dart';
 import 'package:tmdb_flutter/data/tmdb/model/paged.dart';
 import 'package:tmdb_flutter/data/tmdb/model/tv_show.dart';
+import 'package:tmdb_flutter/data/tmdb/model/tv_show_details.dart';
 
-/// TV shows and TV genres.
+/// TV shows, TV genres, and TV details.
 ///
 /// Failures are thrown as [TmdbException].
 abstract interface class TvRepository {
@@ -28,4 +29,7 @@ abstract interface class TvRepository {
     String? sortBy,
     int page = 1,
   });
+
+  /// TV card for [tvId], including credits and videos.
+  Future<TvShowDetails> getTvShowDetails(int tvId);
 }

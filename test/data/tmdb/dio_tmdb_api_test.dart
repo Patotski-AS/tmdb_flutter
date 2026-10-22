@@ -105,6 +105,24 @@ void main() {
 
     final configuration = _requestEnding(adapter, '/configuration');
     expect(configuration.queryParameters['language'], 'ru-RU');
+
+    await api.getMovieDetails(id: 550);
+    await api.getTvShowDetails(id: 1396);
+
+    final movie = _requestEnding(adapter, '/movie/550');
+    expect(movie.queryParameters['language'], 'ru-RU');
+    expect(
+      movie.queryParameters['append_to_response'],
+      'credits,videos,images,recommendations',
+    );
+    expect(movie.queryParameters.containsKey('page'), isFalse);
+
+    final show = _requestEnding(adapter, '/tv/1396');
+    expect(show.queryParameters['language'], 'ru-RU');
+    expect(
+      show.queryParameters['append_to_response'],
+      'credits,videos,images,recommendations',
+    );
   });
 }
 
@@ -164,6 +182,12 @@ String _bodyFor(String path) {
   if (path.endsWith('/movie/popular')) {
     return _moviePageBody;
   }
+  if (RegExp(r'/movie/\d+$').hasMatch(path)) {
+    return _movieDetailsBody;
+  }
+  if (RegExp(r'/tv/\d+$').hasMatch(path)) {
+    return _tvDetailsBody;
+  }
   return _emptyPageBody;
 }
 
@@ -189,6 +213,20 @@ const _moviePageBody = '''
   ],
   "total_pages": 1,
   "total_results": 2
+}
+''';
+
+const _movieDetailsBody = '''
+{"id":550,"title":"Бойцовский клуб","unknown_field":"ignored","budget":0}
+''';
+
+const _tvDetailsBody = '''
+{
+  "id": 1396,
+  "name": "Во все тяжкие",
+  "unknown_field": true,
+  "episode_run_time": [47, 0],
+  "number_of_seasons": 5
 }
 ''';
 

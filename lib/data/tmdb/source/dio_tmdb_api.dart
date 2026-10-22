@@ -4,12 +4,15 @@ import 'package:tmdb_flutter/core/network/tmdb_exception.dart';
 import 'package:tmdb_flutter/core/network/tmdb_exception_mapper.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/configuration_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/genre_dto.dart';
+import 'package:tmdb_flutter/data/tmdb/dto/movie_details_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/movie_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/person_dto.dart';
+import 'package:tmdb_flutter/data/tmdb/dto/tv_show_details_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/tv_show_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/source/tmdb_api.dart';
 
 const String _language = 'ru-RU';
+const String _detailsAppend = 'credits,videos,images,recommendations';
 
 /// [TmdbApi] implemented with [Dio].
 ///
@@ -50,11 +53,29 @@ final class DioTmdbApi implements TmdbApi {
   }
 
   @override
+  Future<MovieDetailsDto> getMovieDetails({required int id}) {
+    return _get(
+      'movie/$id',
+      decode: MovieDetailsDto.fromJson,
+      queryParameters: _query(appendToResponse: _detailsAppend),
+    );
+  }
+
+  @override
   Future<PopularTvResponseDto> getPopularTvShows({required int page}) {
     return _get(
       'tv/popular',
       decode: PopularTvResponseDto.fromJson,
       queryParameters: _query(page: page),
+    );
+  }
+
+  @override
+  Future<TvShowDetailsDto> getTvShowDetails({required int id}) {
+    return _get(
+      'tv/$id',
+      decode: TvShowDetailsDto.fromJson,
+      queryParameters: _query(appendToResponse: _detailsAppend),
     );
   }
 
@@ -162,6 +183,7 @@ Map<String, dynamic> _query({
   String? query,
   int? genreId,
   String? sortBy,
+  String? appendToResponse,
   bool hideAdult = false,
 }) {
   return {
@@ -170,6 +192,7 @@ Map<String, dynamic> _query({
     'query': ?query,
     'with_genres': ?genreId,
     'sort_by': ?sortBy,
+    'append_to_response': ?appendToResponse,
     if (hideAdult) 'include_adult': false,
   };
 }

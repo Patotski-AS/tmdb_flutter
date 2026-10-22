@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tmdb_flutter/app/placeholder_page.dart';
+import 'package:tmdb_flutter/feature/details/details_page.dart';
+import 'package:tmdb_flutter/feature/details/details_state.dart';
 import 'package:tmdb_flutter/feature/media/media_page.dart';
 
 part 'router.g.dart';
@@ -61,7 +63,11 @@ class MovieRoute extends GoRouteData with $MovieRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return PlaceholderPage(title: 'Фильм', id: id);
+    final movieId = int.tryParse(id);
+    if (movieId == null) {
+      return const DetailsInvalidIdPage();
+    }
+    return DetailsPage(mediaType: DetailsMediaType.movie, id: movieId);
   }
 }
 
@@ -75,7 +81,11 @@ class TvRoute extends GoRouteData with $TvRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return PlaceholderPage(title: 'Сериал', id: id);
+    final tvId = int.tryParse(id);
+    if (tvId == null) {
+      return const DetailsInvalidIdPage();
+    }
+    return DetailsPage(mediaType: DetailsMediaType.tv, id: tvId);
   }
 }
 
