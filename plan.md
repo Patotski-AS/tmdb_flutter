@@ -250,11 +250,11 @@ Use case здесь оправданы: цепочка токен → сесси
 
 ### `feat/session`
 
-- [ ] Клиент: request token, session, логин по паролю, аккаунт, logout
-- [ ] `SessionRepository`: `Guest` / `Authenticated`, восстановление из secure storage
-- [ ] Интерцептор подставляет `session_id` только нужным запросам
-- [ ] Use case входа: токен → подтверждение → сессия → аккаунт
-- [ ] Тесты: восстановление сессии и logout
+- [x] Клиент: request token, session, логин по паролю, аккаунт, logout
+- [x] `SessionRepository`: `Guest` / `Authenticated`, восстановление из secure storage
+- [x] Интерцептор подставляет `session_id` только нужным запросам
+- [x] Use case входа: токен → подтверждение → сессия → аккаунт
+- [x] Тесты: восстановление сессии и logout
 
 ### `feat/profile-favorites`
 
