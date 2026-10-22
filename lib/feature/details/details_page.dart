@@ -7,6 +7,8 @@ import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tmdb_flutter/app/router.dart';
 import 'package:tmdb_flutter/app/theme/tmdb_colors.dart';
+import 'package:tmdb_flutter/data/session/session_repository.dart';
+import 'package:tmdb_flutter/data/session/session_state.dart';
 import 'package:tmdb_flutter/feature/details/details_notifier.dart';
 import 'package:tmdb_flutter/feature/details/details_state.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -41,6 +43,9 @@ class DetailsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(detailsProvider(mediaType, id));
     final notifier = ref.read(detailsProvider(mediaType, id).notifier);
+    final session = ref.watch(sessionRepositoryProvider);
+    final signedIn = session.asData?.value is Authenticated;
+    final favoriteEnabled = session.hasValue && !state.isFavoriteLoading;
     final gallery = state.imageGallery;
     final galleryImages = gallery == null
         ? const <String>[]
@@ -78,6 +83,16 @@ class DetailsPage extends ConsumerWidget {
                   ).push<void>(context),
                 );
               },
+              favoriteLabel: _favoriteLabel(signedIn: signedIn, state: state),
+              onFavorite: favoriteEnabled
+                  ? () => _onFavorite(
+                      context,
+                      ref,
+                      mediaType: mediaType,
+                      id: id,
+                      signedIn: signedIn,
+                    )
+                  : null,
             ),
           ),
           if (showGallery)
@@ -115,6 +130,8 @@ Widget _detailsBody({
   required ValueChanged<String> onVideoTap,
   required _ImageTap onImageTap,
   required ValueChanged<int> onRecommendationTap,
+  required String favoriteLabel,
+  required VoidCallback? onFavorite,
 }) {
   if (state.isLoading && state.title == null) {
     return const _DetailsLoading();
@@ -126,6 +143,8 @@ Widget _detailsBody({
   return _DetailsBody(
     state: state,
     showFavorite: mediaType == DetailsMediaType.movie,
+    favoriteLabel: favoriteLabel,
+    onFavorite: onFavorite,
     onShowFullCast: onShowFullCast,
     onCastTap: onCastTap,
     onVideoTap: onVideoTap,
@@ -147,7 +166,37 @@ Future<void> _openYoutube(String key) {
   return launchUrl(uri, mode: LaunchMode.externalApplication);
 }
 
-void _ignoreFavorite() {}
+void _onFavorite(
+  BuildContext context,
+  WidgetRef ref, {
+  required DetailsMediaType mediaType,
+  required int id,
+  required bool signedIn,
+}) {
+  if (!signedIn) {
+    unawaited(const ProfileRoute().push<void>(context));
+    return;
+  }
+  if (mediaType != DetailsMediaType.movie) {
+    return;
+  }
+  unawaited(
+    ref.read(detailsProvider(mediaType, id).notifier).toggleFavorite(),
+  );
+}
+
+String _favoriteLabel({
+  required bool signedIn,
+  required DetailsState state,
+}) {
+  if (!signedIn || state.isFavorite != true) {
+    if (signedIn && state.isFavoriteLoading && state.isFavorite == null) {
+      return '…';
+    }
+    return '☆ В избранное';
+  }
+  return '★ В избранном';
+}
 
 class _DetailsScaffold extends StatelessWidget {
   const new({required this.body});

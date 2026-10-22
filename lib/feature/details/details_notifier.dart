@@ -2,6 +2,10 @@ import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tmdb_flutter/core/network/tmdb_exception.dart';
+import 'package:tmdb_flutter/data/account/account_exception.dart';
+import 'package:tmdb_flutter/data/account/account_providers.dart';
+import 'package:tmdb_flutter/data/session/session_repository.dart';
+import 'package:tmdb_flutter/data/session/session_state.dart';
 import 'package:tmdb_flutter/data/tmdb/model/cast_member.dart';
 import 'package:tmdb_flutter/data/tmdb/model/crew_member.dart';
 import 'package:tmdb_flutter/data/tmdb/model/media_image.dart';
@@ -22,9 +26,13 @@ const _videoPriority = ['Trailer', 'Teaser', 'Clip'];
 @riverpod
 class DetailsNotifier extends _$DetailsNotifier {
   bool _inFlight = false;
+  var _favoriteEpoch = 0;
 
   @override
   DetailsState build(DetailsMediaType mediaType, int id) {
+    ref.listen(sessionRepositoryProvider, (previous, next) {
+      _onSession(next);
+    });
     unawaited(
       Future<void>.microtask(() {
         if (!ref.mounted) {
@@ -46,13 +54,17 @@ class DetailsNotifier extends _$DetailsNotifier {
     _inFlight = true;
     final media = mediaType;
     final mediaId = id;
+    final favorite = state.isFavorite;
     state = state.copyWith(isLoading: true, error: null);
     try {
       final loaded = await _fetch(media, mediaId);
       if (!ref.mounted) {
         return;
       }
-      state = loaded;
+      state = loaded.copyWith(isFavorite: favorite);
+      if (media == DetailsMediaType.movie && _isAuthenticated()) {
+        unawaited(_loadFavorite());
+      }
     } on TmdbException catch (error) {
       if (!ref.mounted) {
         return;
@@ -60,6 +72,88 @@ class DetailsNotifier extends _$DetailsNotifier {
       state = state.copyWith(isLoading: false, error: error.message);
     } finally {
       _inFlight = false;
+    }
+  }
+
+  /// Switches the movie favorite flag.
+  ///
+  /// Guests return without an account request. A second call while
+  /// the request is running does nothing. On failure the previous
+  /// flag stays and [DetailsState.favoriteMessage] is set.
+  Future<void> toggleFavorite() async {
+    if (!ref.mounted || mediaType != DetailsMediaType.movie) {
+      return;
+    }
+    if (state.isFavoriteLoading || !_isAuthenticated()) {
+      return;
+    }
+    final next = !(state.isFavorite ?? false);
+    _favoriteEpoch += 1;
+    state = state.copyWith(isFavoriteLoading: true, favoriteMessage: null);
+    try {
+      await ref
+          .read(accountRepositoryProvider)
+          .setFavorite(movieId: id, favorite: next);
+      if (!ref.mounted) {
+        return;
+      }
+      if (!_isAuthenticated()) {
+        state = state.copyWith(isFavorite: null, isFavoriteLoading: false);
+        return;
+      }
+      state = state.copyWith(isFavorite: next, isFavoriteLoading: false);
+    } on Exception catch (error) {
+      if (!ref.mounted) {
+        return;
+      }
+      state = state.copyWith(
+        isFavoriteLoading: false,
+        favoriteMessage: _favoriteError(error),
+      );
+    }
+  }
+
+  void _onSession(AsyncValue<SessionState> next) {
+    if (!ref.mounted || mediaType != DetailsMediaType.movie) {
+      return;
+    }
+    final value = next.asData?.value;
+    if (value is Authenticated) {
+      if (state.title != null && !state.isFavoriteLoading) {
+        unawaited(_loadFavorite());
+      }
+      return;
+    }
+    if (next.hasValue) {
+      _favoriteEpoch += 1;
+      state = state.copyWith(isFavorite: null, isFavoriteLoading: false);
+    }
+  }
+
+  bool _isAuthenticated() {
+    final value = ref.read(sessionRepositoryProvider).asData?.value;
+    return value is Authenticated;
+  }
+
+  Future<void> _loadFavorite() async {
+    if (!ref.mounted || mediaType != DetailsMediaType.movie) {
+      return;
+    }
+    if (!_isAuthenticated() || state.isFavoriteLoading) {
+      return;
+    }
+    final epoch = _favoriteEpoch;
+    try {
+      final favorite = await ref.read(accountRepositoryProvider).isFavorite(id);
+      if (!ref.mounted || epoch != _favoriteEpoch || !_isAuthenticated()) {
+        return;
+      }
+      if (state.isFavoriteLoading) {
+        return;
+      }
+      state = state.copyWith(isFavorite: favorite);
+    } on Exception {
+      // A failed read keeps the previous star.
     }
   }
 
@@ -109,6 +203,16 @@ class DetailsNotifier extends _$DetailsNotifier {
         .getTvShowDetails(mediaId);
     return _tvState(details);
   }
+}
+
+String _favoriteError(Exception error) {
+  if (error is TmdbException) {
+    return error.message;
+  }
+  if (error is AccountAuthorizationException) {
+    return error.message;
+  }
+  return 'Не удалось обновить избранное';
 }
 
 DetailsState _movieState(MovieDetails details) {

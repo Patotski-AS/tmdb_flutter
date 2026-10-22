@@ -8,6 +8,8 @@ class _DetailsBody extends StatelessWidget {
   const new({
     required this.state,
     required this.showFavorite,
+    required this.favoriteLabel,
+    required this.onFavorite,
     required this.onShowFullCast,
     required this.onCastTap,
     required this.onVideoTap,
@@ -17,6 +19,8 @@ class _DetailsBody extends StatelessWidget {
 
   final DetailsState state;
   final bool showFavorite;
+  final String favoriteLabel;
+  final VoidCallback? onFavorite;
   final VoidCallback onShowFullCast;
   final ValueChanged<int> onCastTap;
   final ValueChanged<String> onVideoTap;
@@ -28,14 +32,25 @@ class _DetailsBody extends StatelessWidget {
     final visibleCast = state.showFullCast
         ? state.cast
         : state.cast.take(_castPreviewCount).toList();
+    final favoriteMessage = state.favoriteMessage;
     return ListView(
       padding: const EdgeInsets.only(bottom: 24),
       children: [
         _DetailsHero(
           state: state,
           showFavorite: showFavorite,
+          favoriteLabel: favoriteLabel,
+          onFavorite: onFavorite,
           cacheWidth: _cacheWidth(context, 100),
         ),
+        if (favoriteMessage != null)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+            child: Text(
+              favoriteMessage,
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
+          ),
         const SizedBox(height: 16),
         _Overview(state: state),
         if (state.cast.isNotEmpty) ...[
@@ -100,11 +115,15 @@ class _DetailsHero extends StatelessWidget {
   const new({
     required this.state,
     required this.showFavorite,
+    required this.favoriteLabel,
+    required this.onFavorite,
     required this.cacheWidth,
   });
 
   final DetailsState state;
   final bool showFavorite;
+  final String favoriteLabel;
+  final VoidCallback? onFavorite;
   final int cacheWidth;
 
   @override
@@ -178,13 +197,13 @@ class _DetailsHero extends StatelessWidget {
                         if (showFavorite) ...[
                           const SizedBox(height: 4),
                           TextButton(
-                            onPressed: _ignoreFavorite,
+                            onPressed: onFavorite,
                             style: TextButton.styleFrom(
                               padding: EdgeInsets.zero,
                               minimumSize: Size.zero,
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
-                            child: const Text('☆ В избранное'),
+                            child: Text(favoriteLabel),
                           ),
                         ],
                         if (tagline != null) ...[
