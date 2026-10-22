@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tmdb_flutter/app/placeholder_page.dart';
+import 'package:tmdb_flutter/feature/media/media_page.dart';
 
 part 'router.g.dart';
 
@@ -11,9 +12,7 @@ part 'router.g.dart';
   routes: [
     TypedGoRoute<ProfileRoute>(
       path: 'profile',
-      routes: [
-        TypedGoRoute<FavoritesRoute>(path: 'favorites'),
-      ],
+      routes: [TypedGoRoute<FavoritesRoute>(path: 'favorites')],
     ),
     TypedGoRoute<MovieRoute>(path: 'movie/:id'),
     TypedGoRoute<TvRoute>(path: 'tv/:id'),
@@ -26,7 +25,7 @@ class CatalogRoute extends GoRouteData with $CatalogRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const PlaceholderPage(title: 'Каталог');
+    return const MediaPage();
   }
 }
 
