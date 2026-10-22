@@ -42,7 +42,7 @@ TvRepository tvRepository(Ref ref) {
   );
 }
 
-/// Popular people and person search.
+/// Popular people, person search, and person details.
 @Riverpod(keepAlive: true)
 PersonRepository personRepository(Ref ref) {
   return PersonRepositoryImpl(

@@ -9,6 +9,7 @@ import 'package:tmdb_flutter/data/tmdb/dto/details_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/genre_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/movie_details_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/movie_dto.dart';
+import 'package:tmdb_flutter/data/tmdb/dto/person_details_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/person_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/tv_show_details_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/tv_show_dto.dart';
@@ -153,9 +154,7 @@ const _tvDetails = TvShowDetailsDto(
     CreatedByDto(id: 3, name: '  '),
   ],
   credits: CreditsDto(
-    crew: [
-      CrewMemberDto(id: 9, name: 'Мишель Макларен', job: 'Director'),
-    ],
+    crew: [CrewMemberDto(id: 9, name: 'Мишель Макларен', job: 'Director')],
   ),
 );
 
@@ -434,6 +433,9 @@ final class _CardApi implements TmdbApi {
     int? genreId,
     String? sortBy,
   }) => _unused();
+
+  @override
+  Future<PersonDetailsDto> getPersonDetails({required int id}) => _unused();
 }
 
 Never _unused() => throw UnimplementedError();

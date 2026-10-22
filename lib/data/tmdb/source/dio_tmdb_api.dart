@@ -6,6 +6,7 @@ import 'package:tmdb_flutter/data/tmdb/dto/configuration_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/genre_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/movie_details_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/movie_dto.dart';
+import 'package:tmdb_flutter/data/tmdb/dto/person_details_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/person_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/tv_show_details_dto.dart';
 import 'package:tmdb_flutter/data/tmdb/dto/tv_show_dto.dart';
@@ -13,6 +14,7 @@ import 'package:tmdb_flutter/data/tmdb/source/tmdb_api.dart';
 
 const String _language = 'ru-RU';
 const String _detailsAppend = 'credits,videos,images,recommendations';
+const String _personAppend = 'combined_credits';
 
 /// [TmdbApi] implemented with [Dio].
 ///
@@ -85,6 +87,15 @@ final class DioTmdbApi implements TmdbApi {
       'person/popular',
       decode: PopularPeopleResponseDto.fromJson,
       queryParameters: _query(page: page),
+    );
+  }
+
+  @override
+  Future<PersonDetailsDto> getPersonDetails({required int id}) {
+    return _get(
+      'person/$id',
+      decode: PersonDetailsDto.fromJson,
+      queryParameters: _query(appendToResponse: _personAppend),
     );
   }
 

@@ -200,12 +200,12 @@ final class TvRepositoryProvider
 
 String _$tvRepositoryHash() => r'e23454e1cc7b6846b18c2ae391a9c837ca5dcc7a';
 
-/// Popular people and person search.
+/// Popular people, person search, and person details.
 
 @ProviderFor(personRepository)
 final personRepositoryProvider = PersonRepositoryProvider._();
 
-/// Popular people and person search.
+/// Popular people, person search, and person details.
 
 final class PersonRepositoryProvider
     extends
@@ -215,7 +215,7 @@ final class PersonRepositoryProvider
           PersonRepository
         >
     with $Provider<PersonRepository> {
-  /// Popular people and person search.
+  /// Popular people, person search, and person details.
   PersonRepositoryProvider._()
     : super(
         from: null,

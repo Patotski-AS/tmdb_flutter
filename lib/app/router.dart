@@ -5,6 +5,7 @@ import 'package:tmdb_flutter/app/placeholder_page.dart';
 import 'package:tmdb_flutter/feature/details/details_page.dart';
 import 'package:tmdb_flutter/feature/details/details_state.dart';
 import 'package:tmdb_flutter/feature/media/media_page.dart';
+import 'package:tmdb_flutter/feature/person/person_page.dart';
 
 part 'router.g.dart';
 
@@ -99,7 +100,11 @@ class PersonRoute extends GoRouteData with $PersonRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return PlaceholderPage(title: 'Персона', id: id);
+    final personId = int.tryParse(id);
+    if (personId == null) {
+      return const DetailsInvalidIdPage();
+    }
+    return PersonPage(id: personId);
   }
 }
 
